@@ -9,7 +9,7 @@ resource "google_storage_bucket" "source_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  ifecycle {
+  lifecycle {
     ignore_changes = [
       name,
       location,
@@ -25,7 +25,7 @@ resource "google_storage_bucket" "util_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  ifecycle {
+  lifecycle {
     ignore_changes = [
       name,
       location,
@@ -40,7 +40,7 @@ resource "google_storage_bucket" "destination_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  ifecycle {
+  lifecycle {
     ignore_changes = [
       name,
       location,
