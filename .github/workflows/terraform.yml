@@ -3,7 +3,7 @@ name: Terraform
 on:
   push:
     branches:
-      - main  # Change this to your default branch if necessary
+      - main  # Change this to your default branch 
 
 jobs:
   terraform:
