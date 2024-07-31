@@ -1,0 +1,7 @@
+project_id              = "global-sign-431120-i5"
+source_bucket_name      = "autoflowx_source"
+destination_bucket_name = "autoflowx_dest"
+util_bucket_name        = "autoflowx_util"
+location                = "europe-west2"
+function_name           = "csv_processor"
+service_account_name    = "csv-function-sa"
