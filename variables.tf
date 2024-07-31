@@ -9,7 +9,7 @@ variable "source_bucket_name" {
 }
 
 variable "util_bucket_name" {
-  description = "The name of the utility GCS bucket"
+  description = "The name the utility GCS bucket"
   type        = string
 }
 
