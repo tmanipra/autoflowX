@@ -54,6 +54,13 @@ resource "google_project_iam_member" "member-role" {
   project = var.project_id
 }
 
+resource "google_project_iam_member" "gcs_pubsub_publisher" {
+  project = var.project_id
+  role    = "roles/pubsub.publisher"
+  member  = "serviceAccount:${data.google_project_service_account.gcs_service_account.email}"
+}
+
+
 resource "google_storage_bucket_object" "function_code" {
   name   = "function.zip"
   bucket = google_storage_bucket.util_bucket.name
@@ -121,7 +128,7 @@ resource "google_cloudfunctions2_function" "function" {
     }
   }
 
-  depends_on = [google_service_account.function_service_account, google_project_iam_member.member-role]
+  depends_on = [google_service_account.function_service_account, google_project_iam_member.member-role, google_project_iam_member.gcs_pubsub_publisher]
 }
 
 
