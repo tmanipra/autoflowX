@@ -139,3 +139,39 @@ resource "google_cloudfunctions2_function" "function" {
 }
 
 
+resource "google_bigquery_dataset" "dataset" {
+  dataset_id = var.dataset_id
+  location   = var.location 
+}
+
+resource "google_bigquery_table" "external_table" {
+  dataset_id = google_bigquery_dataset.dataset.dataset_id
+  landing_table_id   = var.landing_table_id
+
+  external_data_configuration {
+    source_uris = [var.gcs_bucket_uri_landing]
+
+    csv_options {
+      skip_leading_rows = 1
+    }
+
+    schema {
+      field {
+        name = "load_date"
+        type = "DATE"
+      }
+
+      field {
+        name = "load_time"
+        type = "TIMESTAMP"
+      }
+
+      field {
+        name = "file_name"
+        type = "STRING"
+      }
+    }
+
+    source_format = "CSV"
+  }
+}
