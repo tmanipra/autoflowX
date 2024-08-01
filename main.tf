@@ -113,7 +113,7 @@ resource "google_service_account" "function_service_account" {
 
 resource "google_project_iam_member" "storage_admin" {
   project = var.project_id
-  role    = "roles/storage.admin"
+  role    = ["roles/storage.admin", "roles/eventarc.eventReceiver", "roles/run.invoker"]
   member  = "serviceAccount:${google_service_account.function_service_account.email}"
 }
 
