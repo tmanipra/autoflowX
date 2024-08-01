@@ -133,7 +133,7 @@ resource "google_cloudfunctions2_function" "function" {
     }
   }
 
-  depends_on = [google_service_account.function_service_account]
+  depends_on = [google_service_account.function_service_account, google_project_iam_member.storage_admin, google_project_iam_member.pubsub_admin, google_project_iam_member.event_receiver, google_project_iam_member.run_invoker]
 }
 
 
