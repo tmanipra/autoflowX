@@ -24,7 +24,7 @@ jobs:
         terraform_version: 1.3.6  # Specify your desired Terraform version
 
     - name: Authenticate to Google Cloud
-      run: echo "${{ secrets.GOOGLE_CREDENTIALS }}" > "${HOME}/gcloud.json"
+      run: echo "${{ secrets.GOOGLE_CREDENTIALS }}" > ${HOME}/gcloud.json
 
     - name: Set Google Cloud Credentials
       run: gcloud auth activate-service-account --key-file=${HOME}/gcloud.json
