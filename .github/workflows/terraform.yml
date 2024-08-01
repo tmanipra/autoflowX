@@ -11,7 +11,13 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3.0.0
+
+    - name: Build zip file
+      run: |
+        cd src
+        zip -r ../function_code.zip .
+        cd ..
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
@@ -20,6 +26,12 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
+
+    - name : Terraform Plan
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+      run: terraform plan
 
     - name: Terraform Destroy
       run: terraform destroy -auto-approve
