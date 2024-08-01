@@ -42,6 +42,18 @@ resource "google_service_account" "function_service_account" {
   display_name = "Service account for Cloud Function"
 }
 
+resource "google_project_iam_member" "pubsub_token_creator" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:service-378969527341@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "gcs_pubsub_publisher" {
+  project = var.project_id
+  role    = "roles/pubsub.publisher"
+  member  = "serviceAccount:service-378969527341@gs-project-accounts.iam.gserviceaccount.com"
+}
+
 resource "google_project_iam_member" "member-role" {
   for_each = toset([
     "roles/eventarc.eventReceiver",
