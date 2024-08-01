@@ -123,7 +123,7 @@ resource "google_cloudfunctions2_function" "function" {
     }
   }
 
-  depends_on = [google_service_account.function_service_account, google_project_iam_member.member-role, google_project_iam_member.gcs_pubsub_publisher]
+  depends_on = [google_service_account.function_service_account, google_project_iam_member.member-role]
 }
 
 
