@@ -113,7 +113,18 @@ resource "google_service_account" "function_service_account" {
 
 resource "google_project_iam_member" "storage_admin" {
   project = var.project_id
-  role    = ["roles/storage.admin", "roles/eventarc.eventReceiver", "roles/run.invoker"]
+  role    = ["roles/storage.admin"]
   member  = "serviceAccount:${google_service_account.function_service_account.email}"
 }
 
+resource "google_project_iam_member" "event_receiver" {
+  project = var.project_id
+  role    = "roles/eventarc.eventReceiver"
+  member  = "serviceAccount:${google_service_account.function_service_account.email}"
+}
+
+resource "google_project_iam_member" "run_invoker" {
+  project = var.project_id
+  role    = "roles/run.invoker"
+  member  = "serviceAccount:${google_service_account.function_service_account.email}"
+}
