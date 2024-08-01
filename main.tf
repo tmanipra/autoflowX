@@ -12,7 +12,7 @@ resource "google_storage_bucket_object" "function_code" {
 
 resource "google_cloudfunctions2_function" "function" {
   name        = "gcs-to-gcs-function"
-  location    = var.region
+  location    = var.location
   description = "A function triggered by GCS"
 
   build_config {
