@@ -1,6 +1,6 @@
 terraform {
  backend "gcs" {
-    bucket = "autoflox_util"
+    bucket = "autoflowx_util"
     prefix = "moduleA/terraform/state"
  }
 }
