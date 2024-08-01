@@ -1,7 +1,7 @@
 import os
 from google.cloud import storage
 
-def process_csv(event, context):
+def gcs_to_gcs(event, context):
     bucket_name = event['bucket']
     file_name = event['name']
 
