@@ -75,20 +75,7 @@ resource "google_storage_bucket" "source_bucket" {
 }
 
 
-resource "google_storage_bucket" "util_bucket" {
-  name          = var.util_bucket_name
-  location      = var.location
-  storage_class = "STANDARD"
 
-  uniform_bucket_level_access = true
-  lifecycle {
-    ignore_changes = [
-      name,
-      location,
-      storage_class
-    ]
-  }
-}
 
 resource "google_storage_bucket" "destination_bucket" {
   name          = var.destination_bucket_name
