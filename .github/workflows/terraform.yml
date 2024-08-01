@@ -3,7 +3,7 @@ name: Terraform
 on:
   push:
     branches:
-      - main  # Change this to your default branch
+      - main  # Change this to your default branch 
 
 jobs:
   terraform:
@@ -21,9 +21,14 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
+    - name: Terraform Destroy
+      run: terraform destroy -auto-approve
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+
     - name: Terraform Apply
       run: terraform apply -auto-approve
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
-
