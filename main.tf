@@ -50,7 +50,7 @@ resource "google_project_iam_member" "storage_admin" {
 
 resource "google_project_iam_member" "pubsub_admin" {
   project = var.project_id
-  role    = "roles/pubsub.publisher"
+  role    = "roles/pubsub.admin"
   member  = "serviceAccount:${google_service_account.function_service_account.email}"
 }
 
