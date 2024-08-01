@@ -3,6 +3,63 @@ provider "google" {
   region  = var.location
 }
 
+resource "google_storage_bucket" "source_bucket" {
+  name          = var.source_bucket_name
+  location      = var.location
+  storage_class = "STANDARD"
+
+  uniform_bucket_level_access = true
+  lifecycle {
+    ignore_changes = [
+      name,
+      location,
+      storage_class
+    ]
+  }
+}
+
+
+
+
+resource "google_storage_bucket" "destination_bucket" {
+  name          = var.destination_bucket_name
+  location      = var.location
+  storage_class = "STANDARD"
+
+  uniform_bucket_level_access = true
+  lifecycle {
+    ignore_changes = [
+      name,
+      location,
+      storage_class
+    ]
+  }
+}
+
+
+resource "google_service_account" "function_service_account" {
+  account_id   = var.service_account_name
+  display_name = "Service account for Cloud Function"
+}
+
+resource "google_project_iam_member" "storage_admin" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.function_service_account.email}"
+}
+
+resource "google_project_iam_member" "event_receiver" {
+  project = var.project_id
+  role    = "roles/eventarc.eventReceiver"
+  member  = "serviceAccount:${google_service_account.function_service_account.email}"
+}
+
+resource "google_project_iam_member" "run_invoker" {
+  project = var.project_id
+  role    = "roles/run.invoker"
+  member  = "serviceAccount:${google_service_account.function_service_account.email}"
+}
+
 resource "google_storage_bucket_object" "function_code" {
   name   = "function.zip"
   bucket = google_storage_bucket.util_bucket.name
@@ -73,58 +130,4 @@ resource "google_cloudfunctions2_function" "function" {
   depends_on = [google_service_account.function_service_account]
 }
 
-resource "google_storage_bucket" "source_bucket" {
-  name          = var.source_bucket_name
-  location      = var.location
-  storage_class = "STANDARD"
 
-  uniform_bucket_level_access = true
-  lifecycle {
-    ignore_changes = [
-      name,
-      location,
-      storage_class
-    ]
-  }
-}
-
-
-
-
-resource "google_storage_bucket" "destination_bucket" {
-  name          = var.destination_bucket_name
-  location      = var.location
-  storage_class = "STANDARD"
-
-  uniform_bucket_level_access = true
-  lifecycle {
-    ignore_changes = [
-      name,
-      location,
-      storage_class
-    ]
-  }
-}
-
-resource "google_service_account" "function_service_account" {
-  account_id   = var.service_account_name
-  display_name = "Service account for Cloud Function"
-}
-
-resource "google_project_iam_member" "storage_admin" {
-  project = var.project_id
-  role    = "roles/storage.admin"
-  member  = "serviceAccount:${google_service_account.function_service_account.email}"
-}
-
-resource "google_project_iam_member" "event_receiver" {
-  project = var.project_id
-  role    = "roles/eventarc.eventReceiver"
-  member  = "serviceAccount:${google_service_account.function_service_account.email}"
-}
-
-resource "google_project_iam_member" "run_invoker" {
-  project = var.project_id
-  role    = "roles/run.invoker"
-  member  = "serviceAccount:${google_service_account.function_service_account.email}"
-}
