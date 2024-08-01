@@ -42,28 +42,16 @@ resource "google_service_account" "function_service_account" {
   display_name = "Service account for Cloud Function"
 }
 
-resource "google_project_iam_member" "storage_admin" {
-  project = var.project_id
-  role    = "roles/storage.admin"
+resource "google_project_iam_member" "member-role" {
+  for_each = toset([
+    "roles/eventarc.eventReceiver",
+    "roles/run.invoker",
+    "roles/pubsub.publisher",
+    "roles/storage.objectUser",
+  ])
+  role    = each.key
   member  = "serviceAccount:${google_service_account.function_service_account.email}"
-}
-
-resource "google_project_iam_member" "pubsub_admin" {
   project = var.project_id
-  role    = "roles/pubsub.admin"
-  member  = "serviceAccount:${google_service_account.function_service_account.email}"
-}
-
-resource "google_project_iam_member" "event_receiver" {
-  project = var.project_id
-  role    = "roles/eventarc.eventReceiver"
-  member  = "serviceAccount:${google_service_account.function_service_account.email}"
-}
-
-resource "google_project_iam_member" "run_invoker" {
-  project = var.project_id
-  role    = "roles/run.invoker"
-  member  = "serviceAccount:${google_service_account.function_service_account.email}"
 }
 
 resource "google_storage_bucket_object" "function_code" {
@@ -133,7 +121,7 @@ resource "google_cloudfunctions2_function" "function" {
     }
   }
 
-  depends_on = [google_service_account.function_service_account, google_project_iam_member.storage_admin, google_project_iam_member.pubsub_admin, google_project_iam_member.event_receiver, google_project_iam_member.run_invoker]
+  depends_on = [google_service_account.function_service_account, google_project_iam_member.member-role]
 }
 
 
