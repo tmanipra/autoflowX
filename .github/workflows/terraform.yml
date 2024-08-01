@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
     - uses: actions/checkout@v3.0.0
 
     - name: Build zip file
@@ -28,10 +27,11 @@ jobs:
       run: terraform init
 
     - name : Terraform Plan
+      run: terraform plan
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
-      run: terraform plan
+
 
     - name: Terraform Destroy
       run: terraform destroy -auto-approve
