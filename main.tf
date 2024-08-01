@@ -56,7 +56,7 @@ resource "google_cloudfunctions2_function" "function" {
     }
   }
 
-  depends_on = [google_service_account.function_service_account.email]
+  depends_on = [google_service_account.function_service_account]
 }
 
 resource "google_storage_bucket" "source_bucket" {
