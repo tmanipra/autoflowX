@@ -48,6 +48,12 @@ resource "google_project_iam_member" "storage_admin" {
   member  = "serviceAccount:${google_service_account.function_service_account.email}"
 }
 
+resource "google_project_iam_member" "pubsub_admin" {
+  project = var.project_id
+  role    = "roles/pubsub.publisher"
+  member  = "serviceAccount:${google_service_account.function_service_account.email}"
+}
+
 resource "google_project_iam_member" "event_receiver" {
   project = var.project_id
   role    = "roles/eventarc.eventReceiver"
