@@ -9,9 +9,9 @@ resource "google_storage_bucket" "source_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  #lifecycle {
-   # prevent_destroy = true
- # }
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 
@@ -23,36 +23,36 @@ resource "google_storage_bucket" "destination_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  #lifecycle {
-  #  prevent_destroy = true
-  #}
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 
 resource "google_service_account" "function_service_account" {
   account_id   = var.service_account_name
   display_name = "Service account for Cloud Function"
-  #lifecycle {
-  #          prevent_destroy = true
-  #  }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 resource "google_project_iam_member" "pubsub_token_creator" {
   project = var.project_id
   role    = "roles/iam.serviceAccountTokenCreator"
   member  = "serviceAccount:service-378969527341@gcp-sa-pubsub.iam.gserviceaccount.com"
-  #lifecycle {
-  #          prevent_destroy = true
-  #  }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 resource "google_project_iam_member" "gcs_pubsub_publisher" {
   project = var.project_id
   role    = "roles/pubsub.publisher"
   member  = "serviceAccount:service-378969527341@gs-project-accounts.iam.gserviceaccount.com"
-  #lifecycle {
-  #          prevent_destroy = true
-  #  }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 resource "google_project_iam_member" "member-role" {
@@ -65,9 +65,9 @@ resource "google_project_iam_member" "member-role" {
   role    = each.key
   member  = "serviceAccount:${google_service_account.function_service_account.email}"
   project = var.project_id
- # lifecycle {
-   #         prevent_destroy = true
-    #}
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 
@@ -76,9 +76,9 @@ resource "google_storage_bucket_object" "function_code" {
   name   = "function.zip"
   bucket = google_storage_bucket.util_bucket.name
   source = data.archive_file.function_code.output_path
-#  lifecycle {
-   #         prevent_destroy = true
-#    }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 resource "google_storage_bucket" "util_bucket" {
@@ -87,9 +87,9 @@ resource "google_storage_bucket" "util_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-#  lifecycle {
- #   prevent_destroy = true
-  #}
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_cloudfunctions2_function" "function" {
@@ -128,9 +128,9 @@ resource "google_cloudfunctions2_function" "function" {
     service_account_email          = google_service_account.function_service_account.email
   }
 
- # lifecycle {
- #           prevent_destroy = true
- #   }
+  lifecycle {
+            prevent_destroy = true
+    }
   event_trigger {
     event_type            = "google.cloud.storage.object.v1.finalized"
     retry_policy          = "RETRY_POLICY_RETRY"
@@ -157,7 +157,7 @@ resource "google_bigquery_table" "external_table" {
   dataset_id = google_bigquery_dataset.dataset.dataset_id
   table_id   = "autoflowx"
   project    = var.project_id
-#  deletion_protection  = false
+  deletion_protection  = false
 
   external_data_configuration {
     source_uris   = ["gs://${var.destination_bucket_name}/*.csv"]
@@ -189,34 +189,34 @@ resource "google_bigquery_table" "external_table" {
 resource "google_service_account" "bq_load_sa" {
   account_id   = "bq-load-sa"
   display_name = "Service Account for loading BigQuery from GCS"
-#  lifecycle {
-#            prevent_destroy = true
-#    }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 resource "google_storage_bucket_iam_member" "bucket_reader" {
   bucket = var.source_bucket_name
   role   = "roles/storage.objectViewer"
   member = "serviceAccount:${google_service_account.bq_load_sa.email}"
-  #lifecycle {
-  #          prevent_destroy = true
-  #  }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 resource "google_project_iam_member" "bq_user" {
   project = var.project_id
   role    = "roles/bigquery.dataEditor"
   member  = "serviceAccount:${google_service_account.bq_load_sa.email}"
-  #lifecycle {
-  #          prevent_destroy = true
-  #  }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
 
 resource "google_project_iam_member" "bq_job_user" {
   project = var.project_id
   role    = "roles/bigquery.jobUser"
   member  = "serviceAccount:${google_service_account.bq_load_sa.email}"
-#  lifecycle {
-#            prevent_destroy = true
-#    }
+  lifecycle {
+            prevent_destroy = true
+    }
 }
