@@ -158,33 +158,33 @@ resource "google_bigquery_dataset" "dataset" {
 
 resource "google_bigquery_table" "external_table" {
   dataset_id = google_bigquery_dataset.dataset.dataset_id
-  table_id   = "autoflowx_landing"
+  table_id   = "your_table_id"
   project    = var.project_id
 
   external_data_configuration {
-    source_uris     = ["gs://${var.destination_bucket_name}/*.csv"]
-    source_format   = "CSV"
+    source_uris   = ["gs://${var.source_bucket_name}/*.csv"]
+    source_format = "CSV"
+    autodetect    = false
 
     csv_options {
       skip_leading_rows = 1
+      quote             = "\""
     }
 
-    schema {
-      field {
+    schema = jsonencode([
+      {
         name = "load_date"
         type = "DATE"
-      }
-
-      field {
+      },
+      {
         name = "load_time"
         type = "TIMESTAMP"
-      }
-
-      field {
+      },
+      {
         name = "file_name"
         type = "STRING"
       }
-    }
+    ])
   }
 }
 
