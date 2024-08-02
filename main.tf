@@ -23,36 +23,36 @@ resource "google_storage_bucket" "destination_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  lifecycle {
-    prevent_destroy = true
-  }
+  #lifecycle {
+  #  prevent_destroy = true
+  #}
 }
 
 
 resource "google_service_account" "function_service_account" {
   account_id   = var.service_account_name
   display_name = "Service account for Cloud Function"
-  lifecycle {
-            prevent_destroy = true
-    }
+  #lifecycle {
+  #          prevent_destroy = true
+  #  }
 }
 
 resource "google_project_iam_member" "pubsub_token_creator" {
   project = var.project_id
   role    = "roles/iam.serviceAccountTokenCreator"
   member  = "serviceAccount:service-378969527341@gcp-sa-pubsub.iam.gserviceaccount.com"
-  lifecycle {
-            prevent_destroy = true
-    }
+  #lifecycle {
+  #          prevent_destroy = true
+  #  }
 }
 
 resource "google_project_iam_member" "gcs_pubsub_publisher" {
   project = var.project_id
   role    = "roles/pubsub.publisher"
   member  = "serviceAccount:service-378969527341@gs-project-accounts.iam.gserviceaccount.com"
-  lifecycle {
-            prevent_destroy = true
-    }
+  #lifecycle {
+  #          prevent_destroy = true
+  #  }
 }
 
 resource "google_project_iam_member" "member-role" {
@@ -128,9 +128,9 @@ resource "google_cloudfunctions2_function" "function" {
     service_account_email          = google_service_account.function_service_account.email
   }
 
-  lifecycle {
-            prevent_destroy = true
-    }
+ # lifecycle {
+ #           prevent_destroy = true
+ #   }
   event_trigger {
     event_type            = "google.cloud.storage.object.v1.finalized"
     retry_policy          = "RETRY_POLICY_RETRY"
@@ -198,25 +198,25 @@ resource "google_storage_bucket_iam_member" "bucket_reader" {
   bucket = var.source_bucket_name
   role   = "roles/storage.objectViewer"
   member = "serviceAccount:${google_service_account.bq_load_sa.email}"
-  lifecycle {
-            prevent_destroy = true
-    }
+  #lifecycle {
+  #          prevent_destroy = true
+  #  }
 }
 
 resource "google_project_iam_member" "bq_user" {
   project = var.project_id
   role    = "roles/bigquery.dataEditor"
   member  = "serviceAccount:${google_service_account.bq_load_sa.email}"
-  lifecycle {
-            prevent_destroy = true
-    }
+  #lifecycle {
+  #          prevent_destroy = true
+  #  }
 }
 
 resource "google_project_iam_member" "bq_job_user" {
   project = var.project_id
   role    = "roles/bigquery.jobUser"
   member  = "serviceAccount:${google_service_account.bq_load_sa.email}"
-  lifecycle {
-            prevent_destroy = true
-    }
+#  lifecycle {
+#            prevent_destroy = true
+#    }
 }
