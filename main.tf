@@ -10,7 +10,7 @@ resource "google_storage_bucket" "source_bucket" {
 
   uniform_bucket_level_access = true
   lifecycle {
-    prevent_destroy = true.
+    prevent_destroy = true,
     ignore_changes = [
       name,
       location,
