@@ -150,9 +150,12 @@ resource "google_bigquery_dataset" "dataset" {
   dataset_id = "autoflowx_landing"
   project    = var.project_id
   location   = var.location
+  lifecycle {
+            prevent_destroy = true
+    }
 
 }
-
+/*
 resource "google_bigquery_table" "external_table" {
   dataset_id = google_bigquery_dataset.dataset.dataset_id
   table_id   = "autoflowx"
@@ -185,7 +188,7 @@ resource "google_bigquery_table" "external_table" {
     ])
   }
 }
-
+*/
 resource "google_service_account" "bq_load_sa" {
   account_id   = "bq-load-sa"
   display_name = "Service Account for loading BigQuery from GCS"
