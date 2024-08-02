@@ -227,7 +227,7 @@ resource "google_project_iam_member" "bq_job_user" {
 
 #######################################################################################################
 
-resource "google_bigquery_dataset" "dataset" {
+resource "google_bigquery_dataset" "staging_dataset" {
   dataset_id = "autoflowx_staging"
   project    = var.project_id
   location   = var.location
@@ -238,7 +238,7 @@ resource "google_bigquery_dataset" "dataset" {
 }
 
 resource "google_bigquery_table" "native_table" {
-  dataset_id = google_bigquery_dataset.dataset.dataset_id
+  dataset_id = google_bigquery_dataset.staging_dataset.dataset_id
   table_id   = "autoflowx"
   project    = var.project_id
   deletion_protection  = true
