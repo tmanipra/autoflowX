@@ -243,20 +243,18 @@ resource "google_bigquery_table" "native_table" {
   project    = var.project_id
   deletion_protection  = true
 
-  schema {
-    field {
-      name = "load_date"
-      type = "DATE"
-    }
-
-    field {
-      name = "load_time"
-      type = "TIMESTAMP"
-    }
-
-    field {
-      name = "file_name"
-      type = "STRING"
-    }
-  }
+  schema = jsonencode([
+      {
+        name = "load_date"
+        type = "DATE"
+      },
+      {
+        name = "load_time"
+        type = "TIMESTAMP"
+      },
+      {
+        name = "file_name"
+        type = "STRING"
+      }
+    ])
 }
