@@ -9,9 +9,9 @@ resource "google_storage_bucket" "source_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  lifecycle {
-    prevent_destroy = true
-  }
+  #lifecycle {
+   # prevent_destroy = true
+ # }
 }
 
 
@@ -65,9 +65,9 @@ resource "google_project_iam_member" "member-role" {
   role    = each.key
   member  = "serviceAccount:${google_service_account.function_service_account.email}"
   project = var.project_id
-  lifecycle {
-            prevent_destroy = true
-    }
+ # lifecycle {
+   #         prevent_destroy = true
+    #}
 }
 
 
@@ -76,9 +76,9 @@ resource "google_storage_bucket_object" "function_code" {
   name   = "function.zip"
   bucket = google_storage_bucket.util_bucket.name
   source = data.archive_file.function_code.output_path
-  lifecycle {
-            prevent_destroy = true
-    }
+#  lifecycle {
+   #         prevent_destroy = true
+#    }
 }
 
 resource "google_storage_bucket" "util_bucket" {
@@ -87,9 +87,9 @@ resource "google_storage_bucket" "util_bucket" {
   storage_class = "STANDARD"
 
   uniform_bucket_level_access = true
-  lifecycle {
-    prevent_destroy = true
-  }
+#  lifecycle {
+ #   prevent_destroy = true
+  #}
 }
 
 resource "google_cloudfunctions2_function" "function" {
@@ -189,9 +189,9 @@ resource "google_bigquery_table" "external_table" {
 resource "google_service_account" "bq_load_sa" {
   account_id   = "bq-load-sa"
   display_name = "Service Account for loading BigQuery from GCS"
-  lifecycle {
-            prevent_destroy = true
-    }
+#  lifecycle {
+#            prevent_destroy = true
+#    }
 }
 
 resource "google_storage_bucket_iam_member" "bucket_reader" {
