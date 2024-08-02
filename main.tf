@@ -10,12 +10,7 @@ resource "google_storage_bucket" "source_bucket" {
 
   uniform_bucket_level_access = true
   lifecycle {
-    prevent_destroy = true,
-    ignore_changes = [
-      name,
-      location,
-      storage_class
-    ]
+    prevent_destroy = true
   }
 }
 
@@ -29,12 +24,7 @@ resource "google_storage_bucket" "destination_bucket" {
 
   uniform_bucket_level_access = true
   lifecycle {
-    prevent_destroy = true,
-    ignore_changes = [
-      name,
-      location,
-      storage_class
-    ]
+    prevent_destroy = true
   }
 }
 
@@ -99,11 +89,6 @@ resource "google_storage_bucket" "util_bucket" {
   uniform_bucket_level_access = true
   lifecycle {
     prevent_destroy = true,
-    ignore_changes = [
-      name,
-      location,
-      storage_class
-    ]
   }
 }
 
