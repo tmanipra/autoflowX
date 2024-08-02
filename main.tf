@@ -155,10 +155,10 @@ resource "google_bigquery_dataset" "dataset" {
     }
 
 }
-/*
+
 resource "google_bigquery_table" "external_table" {
   dataset_id = google_bigquery_dataset.dataset.dataset_id
-  table_id   = "autoflowx"
+  table_id   = "your_table_id"
   project    = var.project_id
   deletion_protection  = false
 
@@ -188,7 +188,7 @@ resource "google_bigquery_table" "external_table" {
     ])
   }
 }
-*/
+
 resource "google_service_account" "bq_load_sa" {
   account_id   = "bq-load-sa"
   display_name = "Service Account for loading BigQuery from GCS"
