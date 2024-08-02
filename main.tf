@@ -143,3 +143,82 @@ resource "google_cloudfunctions2_function" "function" {
 
   depends_on = [google_service_account.function_service_account, google_project_iam_member.member-role]
 }
+
+#######################################################################################################
+
+resource "google_bigquery_dataset" "dataset" {
+  dataset_id = "autoflowx_landing"
+  project    = var.project_id
+  location   = var.location
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_bigquery_table" "external_table" {
+  dataset_id = google_bigquery_dataset.dataset.dataset_id
+  table_id   = "autoflowx_landing"
+  project    = var.project_id
+
+  external_data_configuration {
+    source_uris     = ["gs://${var.destination_bucket_name}/*.csv"]
+    source_format   = "CSV"
+
+    csv_options {
+      skip_leading_rows = 1
+    }
+
+    schema {
+      field {
+        name = "load_date"
+        type = "DATE"
+      }
+
+      field {
+        name = "load_time"
+        type = "TIMESTAMP"
+      }
+
+      field {
+        name = "file_name"
+        type = "STRING"
+      }
+    }
+  }
+}
+
+resource "google_service_account" "bq_load_sa" {
+  account_id   = "bq-load-sa"
+  display_name = "Service Account for loading BigQuery from GCS"
+  lifecycle {
+            prevent_destroy = true
+    }
+}
+
+resource "google_storage_bucket_iam_member" "bucket_reader" {
+  bucket = var.source_bucket_name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.bq_load_sa.email}"
+  lifecycle {
+            prevent_destroy = true
+    }
+}
+
+resource "google_project_iam_member" "bq_user" {
+  project = var.project_id
+  role    = "roles/bigquery.dataEditor"
+  member  = "serviceAccount:${google_service_account.bq_load_sa.email}"
+  lifecycle {
+            prevent_destroy = true
+    }
+}
+
+resource "google_project_iam_member" "bq_job_user" {
+  project = var.project_id
+  role    = "roles/bigquery.jobUser"
+  member  = "serviceAccount:${google_service_account.bq_load_sa.email}"
+  lifecycle {
+            prevent_destroy = true
+    }
+}
