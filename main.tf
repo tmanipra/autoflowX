@@ -157,6 +157,7 @@ resource "google_bigquery_table" "external_table" {
   dataset_id = google_bigquery_dataset.dataset.dataset_id
   table_id   = "autoflowx"
   project    = var.project_id
+  deletion_protection  = true
 
   external_data_configuration {
     source_uris   = ["gs://${var.destination_bucket_name}/*.csv"]
