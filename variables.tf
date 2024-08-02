@@ -32,18 +32,3 @@ variable "service_account_name" {
   description = "The name of the service account"
   type        = string
 }
-
-variable "dataset_id" {
-  description = "The ID of the BigQuery dataset"
-  type        = string
-}
-
-variable "table_id" {
-  description = "The ID of the BigQuery table"
-  type        = string
-}
-
-variable "gcs_bucket_uri" {
-  description = "The URI of the GCS bucket containing the CSV files"
-  type        = string
-}
