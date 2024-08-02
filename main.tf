@@ -88,7 +88,7 @@ resource "google_storage_bucket" "util_bucket" {
 
   uniform_bucket_level_access = true
   lifecycle {
-    prevent_destroy = true,
+    prevent_destroy = true
   }
 }
 
