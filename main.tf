@@ -223,3 +223,40 @@ resource "google_project_iam_member" "bq_job_user" {
             prevent_destroy = true
     }
 }
+
+
+#######################################################################################################
+
+resource "google_bigquery_dataset" "dataset" {
+  dataset_id = "autoflowx_staging"
+  project    = var.project_id
+  location   = var.location
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_bigquery_table" "native_table" {
+  dataset_id = google_bigquery_dataset.dataset.dataset_id
+  table_id   = "autoflowx"
+  project    = var.project_id
+  deletion_protection  = true
+
+  schema {
+    field {
+      name = "load_date"
+      type = "DATE"
+    }
+
+    field {
+      name = "load_time"
+      type = "TIMESTAMP"
+    }
+
+    field {
+      name = "file_name"
+      type = "STRING"
+    }
+  }
+}
