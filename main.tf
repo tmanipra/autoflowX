@@ -268,10 +268,11 @@ resource "google_cloud_run_v2_job" "dbt_job" {
   template {
     template {
       containers {
-        # Use the 'latest' tag to always pull the most recent version of the image
         image = "europe-west2-docker.pkg.dev/global-sign-431120-i5/dbt/image:latest"
         resources {
-          memory_limit = "1Gi"
+          limits {
+            memory = "1Gi"
+          }
         }
       }
       service_account = "tfgitworkflow@global-sign-431120-i5.iam.gserviceaccount.com"
@@ -279,10 +280,10 @@ resource "google_cloud_run_v2_job" "dbt_job" {
     }
   }
 
-  autodelete = false
+  launch_stage = "GA"
 }
 
-resource "google_cloud_run_job_iam_binding" "invoker" {
+resource "google_cloud_run_v2_job_iam_binding" "invoker" {
   location = var.location
   project  = var.project_id
   job_id   = google_cloud_run_v2_job.dbt_job.name
