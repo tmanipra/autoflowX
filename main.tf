@@ -258,3 +258,37 @@ resource "google_bigquery_table" "native_table" {
       }
     ])
 }
+
+##################################################################################################################################
+
+resource "google_cloud_run_v2_job" "dbt_job" {
+  name     = "dbt-job"
+  location = var.location
+
+  template {
+    template {
+      containers {
+        # Use the 'latest' tag to always pull the most recent version of the image
+        image = "europe-west2-docker.pkg.dev/global-sign-431120-i5/dbt/image:latest"
+        resources {
+          memory_limit = "1Gi"
+        }
+      }
+      service_account = "tfgitworkflow@global-sign-431120-i5.iam.gserviceaccount.com"
+      timeout         = "900s"
+    }
+  }
+
+  autodelete = false
+}
+
+resource "google_cloud_run_job_iam_binding" "invoker" {
+  location = var.location
+  project  = var.project_id
+  job_id   = google_cloud_run_v2_job.dbt_job.name
+
+  role    = "roles/run.invoker"
+  members = [
+    "serviceAccount:tfgitworkflow@global-sign-431120-i5.iam.gserviceaccount.com"
+  ]
+}
