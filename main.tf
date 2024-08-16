@@ -270,13 +270,13 @@ resource "google_cloud_run_v2_job" "dbt_job" {
       containers {
         image = "europe-west2-docker.pkg.dev/global-sign-431120-i5/dbt/image:latest"
         resources {
-          limits {
+          limits = {
             memory = "1Gi"
           }
         }
       }
       service_account = "tfgitworkflow@global-sign-431120-i5.iam.gserviceaccount.com"
-      timeout         = "900s"
+      timeout         = "300s"
     }
   }
 
@@ -286,7 +286,7 @@ resource "google_cloud_run_v2_job" "dbt_job" {
 resource "google_cloud_run_v2_job_iam_binding" "invoker" {
   location = var.location
   project  = var.project_id
-  job_id   = google_cloud_run_v2_job.dbt_job.name
+  name     = google_cloud_run_v2_job.dbt_job.name
 
   role    = "roles/run.invoker"
   members = [
